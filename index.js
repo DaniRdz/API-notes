@@ -1,6 +1,8 @@
 const express = require("express");
+const cors = require("cors");
 const app = express();
 
+app.use(cors());
 app.use(express.json());
 
 let notes = [
@@ -15,7 +17,7 @@ let notes = [
     id: 3,
     content: "Hello my litle frinds",
     date: "09/06/2021",
-    important: true,
+    important: false,
   },
 ];
 
@@ -66,7 +68,7 @@ app.post("/api/notes/", (req, res) => {
   res.status(201).json(newNote);
 });
 
-const PORT = 3000;
-app.listen(3000, () => {
+const PORT = 3001;
+app.listen(PORT, () => {
   console.log(`Server runnig on port ${PORT}`);
 });
