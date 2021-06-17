@@ -1,13 +1,13 @@
-POST http://localhost:3000/api/notes/
+POST http://localhost:3001/api/notes/
 Content-Type: application/json
 
 {
-    "content": "this is a new note",
+    "content": "hola mis amigos",
     "important":  true
 }
 
 ### error for a missing note
-POST http://localhost:3000/api/notes/
+POST http://localhost:3001/api/notes/
 Content-Type: application/json
 
 {
