@@ -90,6 +90,8 @@ app.use(notFound);
 app.use(handleErrors);
 
 const PORT = process.env.PORT;
-app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
   console.log(`Server runnig on port ${PORT}`);
 });
+
+module.exports = { app, server };
