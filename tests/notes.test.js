@@ -32,6 +32,21 @@ describe("Test GET endpoint API", () => {
 
     expect(contents).toContain("This is a simul D:");
   });
+
+  test("Get a single exist note", async () => {
+    const { response } = await getAllNotes();
+    const noteToFind = response.body[0];
+
+    const secondResponse = await api
+      .get(`/api/notes/${noteToFind.id}`)
+      .expect(200);
+
+    expect(secondResponse.body.content).toBe("Hello bro :D");
+  });
+
+  test("recive 404 if note doesnt exist", async () => {
+    await api.get("/api/notes/60caab89a41eb81258e8ea2a").expect(404);
+  });
 });
 
 describe("Test POST endpoint API", () => {
@@ -67,9 +82,28 @@ describe("Test POST endpoint API", () => {
   });
 });
 
+describe("Test PUT endpoint API", () => {
+  test("Update a note successfully", async () => {
+    const { response } = await getAllNotes();
+    const noteToUpdate = response.body[1];
+    const noteUpdated = {
+      content: "Note was Update",
+      important: true,
+    };
+
+    await api
+      .put(`/api/notes/${noteToUpdate.id}`)
+      .send(noteUpdated)
+      .expect(200);
+
+    const { contents } = await getAllNotes();
+    expect(contents).toContain(noteUpdated.content);
+  });
+});
+
 describe("Test DELETE endpoint API", () => {
   test("Delete a note succesfully", async () => {
-    const response = await api.get("/api/notes");
+    const { response } = await getAllNotes();
     const noteToDelete = response.body[0];
 
     await api.delete(`/api/notes/${noteToDelete.id}`).expect(204);
