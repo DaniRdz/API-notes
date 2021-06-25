@@ -1,28 +1,9 @@
-const supertest = require("supertest");
-const { app, server } = require("../index");
+const { server } = require("../index");
 
 const mongoose = require("mongoose");
 const Note = require("../models/Note");
 
-const api = supertest(app);
-
-const initialNotes = [
-  {
-    content: "Hello bro :D",
-    important: true,
-    date: new Date(),
-  },
-  {
-    content: "This is a simul D:",
-    important: false,
-    date: new Date(),
-  },
-  {
-    content: "other note",
-    important: false,
-    date: new Date(),
-  },
-];
+const { api, initialNotes, getAllNotes } = require("./helpers");
 
 beforeEach(async () => {
   await Note.deleteMany({});
@@ -42,14 +23,13 @@ describe("Test GET endpoint API", () => {
   });
 
   test("there are two notes", async () => {
-    const response = await api.get("/api/notes");
+    const { response } = await getAllNotes();
     expect(response.body).toHaveLength(initialNotes.length);
   });
 
   test("The some note contain simul message", async () => {
-    const response = await api.get("/api/notes");
+    const { contents } = await getAllNotes();
 
-    const contents = response.body.map((note) => note.content);
     expect(contents).toContain("This is a simul D:");
   });
 });
@@ -66,9 +46,7 @@ describe("Test POST endpoint API", () => {
       .expect(201)
       .expect("Content-Type", /application\/json/);
 
-    const response = await api.get("/api/notes");
-
-    const contents = response.body.map((note) => note.content);
+    const { response, contents } = await getAllNotes();
     expect(contents).toContain(newNote.content);
     expect(response.body).toHaveLength(initialNotes.length + 1);
   });
@@ -83,7 +61,7 @@ describe("Test POST endpoint API", () => {
       .expect(400)
       .expect("Content-Type", /application\/json/);
 
-    const response = await api.get("/api/notes");
+    const { response } = await getAllNotes();
 
     expect(response.body).toHaveLength(initialNotes.length);
   });
@@ -96,9 +74,10 @@ describe("Test DELETE endpoint API", () => {
 
     await api.delete(`/api/notes/${noteToDelete.id}`).expect(204);
 
-    const secondResponse = await api.get("/api/notes");
+    const { response: secondResponse, contents } = await getAllNotes();
 
     expect(secondResponse.body).toHaveLength(initialNotes.length - 1);
+    expect(contents).not.toContain(noteToDelete.content);
   });
 });
 
