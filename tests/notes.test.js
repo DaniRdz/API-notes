@@ -89,6 +89,19 @@ describe("Test POST endpoint API", () => {
   });
 });
 
+describe("Test DELETE endpoint API", () => {
+  test("Delete a note succesfully", async () => {
+    const response = await api.get("/api/notes");
+    const noteToDelete = response.body[0];
+
+    await api.delete(`/api/notes/${noteToDelete.id}`).expect(204);
+
+    const secondResponse = await api.get("/api/notes");
+
+    expect(secondResponse.body).toHaveLength(initialNotes.length - 1);
+  });
+});
+
 afterAll(() => {
   server.close();
   mongoose.connection.close();
