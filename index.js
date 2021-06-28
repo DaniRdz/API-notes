@@ -5,9 +5,8 @@ const express = require("express");
 const cors = require("cors");
 const app = express();
 
-const Note = require("./models/Note");
-
 const notesRouter = require("./controllers/notes");
+const usersRouter = require("./controllers/users");
 
 const notFound = require("./middlewares/notFound");
 const handleErrors = require("./middlewares/handleErrors");
@@ -20,6 +19,8 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api/notes/", notesRouter);
+
+app.use("/api/users/", usersRouter);
 
 app.use(notFound);
 
