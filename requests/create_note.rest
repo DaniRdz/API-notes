@@ -3,6 +3,7 @@ Content-Type: application/json
 
 {
     "content": "hola mis amigos",
+    "userId": "60db8cfa8f2f4b28942c9ecd",
     "important":  true
 }
 

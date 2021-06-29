@@ -1,10 +1,13 @@
 const notesRouter = require("express").Router();
 const Note = require("../models/Note");
+const User = require("../models/User");
 
 notesRouter.get("/", (req, res) => {
-  Note.find({}).then((notes) => {
-    res.json(notes);
-  });
+  Note.find({})
+    .populate("user", { name: 1, username: 1 })
+    .then((notes) => {
+      res.json(notes);
+    });
 });
 
 notesRouter.get("/:id", (req, res, next) => {
@@ -50,23 +53,33 @@ notesRouter.put("/:id", (req, res, next) => {
     });
 });
 
-notesRouter.post("/", (req, res) => {
-  const note = req.body;
+notesRouter.post("/", (req, res, next) => {
+  const { content, important = false, userId } = req.body;
 
-  if (!note || !note.content) {
+  if (!content) {
     return res.status(400).json({
       error: "note or note content is missing",
     });
   }
 
-  const newNote = new Note({
-    content: note.content,
-    important: note.important || false,
-    date: new Date().toISOString(),
-  });
+  User.findById(userId).then((user) => {
+    const newNote = new Note({
+      content: content,
+      important,
+      user: user._id,
+      date: new Date().toISOString(),
+    });
 
-  newNote.save().then((savedNote) => {
-    res.status(201).json(savedNote);
+    newNote
+      .save()
+      .then((savedNote) => {
+        user.notes = user.notes.concat(savedNote._id);
+        user.save();
+        res.status(201).json(savedNote);
+      })
+      .catch((error) => {
+        next(error);
+      });
   });
 });
 

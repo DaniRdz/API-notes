@@ -3,6 +3,14 @@ const bcrypt = require("bcrypt");
 
 const User = require("../models/User");
 
+usersRouter.get("/", (req, res) => {
+  User.find({})
+    .populate("notes", { user: 0 })
+    .then((users) => {
+      res.json(users);
+    });
+});
+
 usersRouter.post("/", (req, res) => {
   const user = req.body;
   const { username, name, password } = user;
