@@ -17,9 +17,14 @@ usersRouter.post("/", (req, res) => {
       passwordHash,
     });
 
-    newUser.save().then((newUser) => {
-      res.status(201).json(newUser);
-    });
+    newUser
+      .save()
+      .then((newUser) => {
+        res.status(201).json(newUser);
+      })
+      .catch((error) => {
+        res.status(400).json({ error });
+      });
   });
 });
 
