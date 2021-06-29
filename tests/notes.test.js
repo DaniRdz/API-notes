@@ -3,7 +3,7 @@ const { server } = require("../index");
 const mongoose = require("mongoose");
 const Note = require("../models/Note");
 
-const { api, initialNotes, getAllNotes } = require("./helpers");
+const { api, initialNotes, getAllNotes, getUsers } = require("./helpers");
 
 beforeEach(async () => {
   await Note.deleteMany({});
@@ -51,9 +51,12 @@ describe("Test GET endpoint API", () => {
 
 describe("Test POST endpoint API", () => {
   test("a valid note can be added", async () => {
+    const users = await getUsers();
+    const usersId = users.map((user) => user.id);
     const newNote = {
       content: "this is a New note",
       important: "true",
+      userId: usersId[0],
     };
     await api
       .post("/api/notes/")
