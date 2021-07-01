@@ -3,7 +3,7 @@ Content-Type: application/json
 Authorization:  Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYwZGI4Y2ZhOGYyZjRiMjg5NDJjOWVjZCIsInVzZXJuYW1lIjoiRGFuaWVsIiwiaWF0IjoxNjI1MTc3MzI2fQ.SDu8DaJ-l3YkiaJMYweAdUBLOEVKCKuPX6FdQpAU0nI
 
 {
-    "content": "con token",
+    "content": "con middleware",
     "important":  true
 }
 

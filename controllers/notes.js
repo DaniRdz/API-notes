@@ -1,5 +1,6 @@
 const notesRouter = require("express").Router();
-const jwt = require("jsonwebtoken");
+
+const userExtractor = require("../middlewares/userExtractor");
 
 const Note = require("../models/Note");
 const User = require("../models/User");
@@ -27,7 +28,7 @@ notesRouter.get("/:id", (req, res, next) => {
     });
 });
 
-notesRouter.delete("/:id", (req, res, next) => {
+notesRouter.delete("/:id", userExtractor, (req, res, next) => {
   const id = req.params.id;
   Note.findByIdAndRemove(id)
     .then((result) => {
@@ -38,7 +39,7 @@ notesRouter.delete("/:id", (req, res, next) => {
     });
 });
 
-notesRouter.put("/:id", (req, res, next) => {
+notesRouter.put("/:id", userExtractor, (req, res, next) => {
   const id = req.params.id;
   const note = req.body;
 
@@ -55,28 +56,15 @@ notesRouter.put("/:id", (req, res, next) => {
     });
 });
 
-notesRouter.post("/", (req, res, next) => {
+notesRouter.post("/", userExtractor, (req, res, next) => {
   const { content, important = false } = req.body;
-  const authorization = req.get("authorization");
+  const { userId } = req;
 
-  let token = "";
-
-  if (authorization && authorization.toLocaleLowerCase().startsWith("bearer")) {
-    token = authorization.substring(7);
-  }
-  const decodeToken = jwt.verify(token, process.env.SECRET_KEY);
-
-  if (!token || !decodeToken.id) {
-    return res.status(401).json({
-      error: "token missing or invalid",
-    });
-  }
   if (!content) {
     return res.status(400).json({
       error: "note or note content is missing",
     });
   }
-  const { id: userId } = decodeToken;
 
   User.findById(userId).then((user) => {
     const newNote = new Note({
