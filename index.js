@@ -7,6 +7,7 @@ const app = express();
 
 const notesRouter = require("./controllers/notes");
 const usersRouter = require("./controllers/users");
+const loginRouter = require("./controllers/login");
 
 const notFound = require("./middlewares/notFound");
 const handleErrors = require("./middlewares/handleErrors");
@@ -21,6 +22,8 @@ app.get("/", (req, res) => {
 app.use("/api/notes/", notesRouter);
 
 app.use("/api/users/", usersRouter);
+
+app.use("/api/login/", loginRouter);
 
 app.use(notFound);
 
