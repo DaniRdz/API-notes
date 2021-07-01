@@ -1,9 +1,9 @@
 POST http://localhost:3001/api/notes/
 Content-Type: application/json
+Authorization:  Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYwZGI4Y2ZhOGYyZjRiMjg5NDJjOWVjZCIsInVzZXJuYW1lIjoiRGFuaWVsIiwiaWF0IjoxNjI1MTc3MzI2fQ.SDu8DaJ-l3YkiaJMYweAdUBLOEVKCKuPX6FdQpAU0nI
 
 {
-    "content": "hola mis amigos",
-    "userId": "60db8cfa8f2f4b28942c9ecd",
+    "content": "con token",
     "important":  true
 }
 
